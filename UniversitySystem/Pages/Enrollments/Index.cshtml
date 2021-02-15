@@ -1,0 +1,55 @@
+﻿@page
+@model UniversitySystem.Pages.Enrollments.IndexModel
+
+@{
+}
+<h1>Enrollment students</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Enrollment.CourseId" class="control-label">Course name</label>
+                <label asp-for="Enrollment.CourseId" class="control-label">@ViewData["CourseId"]</label>
+                <span></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enrollment.StudentId" class="control-label">Student id</label>
+                <select asp-for="Enrollment.StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="enroll" class="btn btn-primary" />
+                <span>@ViewData["error"]</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<h2>Записани студенти:</h2>
+@foreach (var item in Model.Enrollments)
+{
+    @if (item.CourseId == Model.EnrollmentId)
+    {
+
+
+        <div class="card" style="width: 18rem;"></div>
+        <div class="card-body">
+            <h5 class="card-title">Student id: @item.StudentId</h5>
+            <p class="card-text">@item.Student.FirstName @item.Student.LastName</p>
+        </div>
+
+    }
+}
+
+
+<a asp-page="/Courses/Index">Back to List</a>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
