@@ -17,6 +17,7 @@ namespace UniversitySystem.Model
         public DateTime StartDate { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
         public decimal Price { get; set; }
+        public Teacher Teacher { get; set; }
         public ICollection<Student> Students { get; set; }
     }
 }
