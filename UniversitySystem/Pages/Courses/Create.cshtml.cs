@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using UniversitySystem.Data;
 using UniversitySystem.Model;
 
@@ -14,20 +15,21 @@ namespace UniversitySystem.Pages.Courses
     {
         private readonly UniversitySystem.Data.UniversitySystemContext _context;
 
+        [BindProperty]
+        public Course Course { get; set; }
+
         public CreateModel(UniversitySystem.Data.UniversitySystemContext context)
         {
             _context = context;
         }
 
+         
         public IActionResult OnGet()
         {
+            ViewData["Teacher"] = new SelectList(_context.Teacher,"Id", "Id","FirstName" ,"LastName");
             return Page();
         }
 
-        [BindProperty]
-        public Course Course { get; set; }
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

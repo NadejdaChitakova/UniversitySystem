@@ -1,0 +1,18 @@
+﻿@page
+@model UniversitySystem.Pages.Teachers.CreateTeacherModel
+@{
+    ViewData["Title"] = "Register teacher";
+}
+
+<h2>Register new teacher:</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="exampleInputEmail1">First name</label>
+        <input asp-for="Teacher.FirstName" class="form-control">
+    </div>
+    <div class="form-group">
+        <label asp-for="Teacher.LastName">Last name</label>
+        <input asp-for="Teacher.LastName" class="form-control">
+    </div>
+    <button type="submit" value="CreateTeacher" class="btn btn-primary">Submit</button>
+</form>
