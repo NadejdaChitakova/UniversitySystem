@@ -10,8 +10,8 @@ using UniversitySystem.Data;
 namespace UniversitySystem.Migrations
 {
     [DbContext(typeof(UniversitySystemContext))]
-    [Migration("20210228085547_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210228122451_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace UniversitySystem.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("CourseTopicId")
+                    b.Property<int?>("CourseTopicId1")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -57,16 +57,25 @@ namespace UniversitySystem.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeacherId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("TopicId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseTopicId");
+                    b.HasIndex("CourseTopicId1");
 
                     b.HasIndex("TeacherId");
+
+                    b.HasIndex("TeacherId1");
+
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Course");
                 });
@@ -92,6 +101,11 @@ namespace UniversitySystem.Migrations
                         {
                             Id = 1,
                             Topic = "Math"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Topic = "Computer sciences"
                         });
                 });
 
@@ -175,12 +189,24 @@ namespace UniversitySystem.Migrations
             modelBuilder.Entity("UniversitySystem.Model.Course", b =>
                 {
                     b.HasOne("UniversitySystem.Model.CourseTopic", "CourseTopic")
+                        .WithMany()
+                        .HasForeignKey("CourseTopicId1");
+
+                    b.HasOne("UniversitySystem.Model.Teacher", null)
                         .WithMany("Courses")
-                        .HasForeignKey("CourseTopicId");
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("UniversitySystem.Model.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId1");
+
+                    b.HasOne("UniversitySystem.Model.CourseTopic", null)
                         .WithMany("Courses")
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CourseTopic");
 

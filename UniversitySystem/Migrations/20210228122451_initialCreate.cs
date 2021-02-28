@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UniversitySystem.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -58,22 +58,35 @@ namespace UniversitySystem.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    TeacherId = table.Column<int>(type: "int", nullable: true),
-                    TopicId = table.Column<int>(type: "int", nullable: true),
-                    CourseTopicId = table.Column<int>(type: "int", nullable: true)
+                    TeacherId = table.Column<int>(type: "int", nullable: false),
+                    TopicId = table.Column<int>(type: "int", nullable: false),
+                    TeacherId1 = table.Column<int>(type: "int", nullable: true),
+                    CourseTopicId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Course_CourseTopic_CourseTopicId",
-                        column: x => x.CourseTopicId,
+                        name: "FK_Course_CourseTopic_CourseTopicId1",
+                        column: x => x.CourseTopicId1,
                         principalTable: "CourseTopic",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Course_CourseTopic_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "CourseTopic",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Course_Teacher_TeacherId",
                         column: x => x.TeacherId,
+                        principalTable: "Teacher",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Course_Teacher_TeacherId1",
+                        column: x => x.TeacherId1,
                         principalTable: "Teacher",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -134,15 +147,30 @@ namespace UniversitySystem.Migrations
                 columns: new[] { "Id", "Topic" },
                 values: new object[] { 1, "Math" });
 
+            migrationBuilder.InsertData(
+                table: "CourseTopic",
+                columns: new[] { "Id", "Topic" },
+                values: new object[] { 2, "Computer sciences" });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Course_CourseTopicId",
+                name: "IX_Course_CourseTopicId1",
                 table: "Course",
-                column: "CourseTopicId");
+                column: "CourseTopicId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Course_TeacherId",
                 table: "Course",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Course_TeacherId1",
+                table: "Course",
+                column: "TeacherId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Course_TopicId",
+                table: "Course",
+                column: "TopicId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseStudent_StudentsId",

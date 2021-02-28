@@ -17,7 +17,6 @@ namespace UniversitySystem.Pages.Courses
 
         [BindProperty]
         public Course Course { get; set; }
-
         public CreateModel(UniversitySystem.Data.UniversitySystemContext context)
         {
             _context = context;
