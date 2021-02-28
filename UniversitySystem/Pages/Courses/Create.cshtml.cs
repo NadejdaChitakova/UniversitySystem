@@ -27,10 +27,11 @@ namespace UniversitySystem.Pages.Courses
         public IActionResult OnGet()
         {
             ViewData["Teacher"] = new SelectList(_context.Teacher,"Id", "Id","FirstName" ,"LastName");
+            ViewData["Topic"] = new SelectList(_context.CourseTopic,"Id", "Topic");
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()  
         {
             if (!ModelState.IsValid)
             {

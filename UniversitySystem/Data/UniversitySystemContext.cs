@@ -13,7 +13,7 @@ namespace UniversitySystem.Data
             : base(options)
         {
         }
-
+        public DbSet<UniversitySystem.Model.CourseTopic> CourseTopic { get; set; }
         public DbSet<UniversitySystem.Model.Course> Course { get; set; }
         public DbSet<UniversitySystem.Model.Student> Student { get; set; }
         public DbSet<UniversitySystem.Model.Teacher> Teacher { get; set; }
@@ -27,7 +27,8 @@ namespace UniversitySystem.Data
             modelBuilder.Entity<Enrollment>()
                 .HasKey(c => new { c.CourseId, c.StudentId });
 
-           
+            modelBuilder.Entity<CourseTopic>().HasData(new CourseTopic { Id = 1 , Topic = "Math"},
+                new CourseTopic { Id = 2, Topic = "Computer sciences" });
         }
     }
 }

@@ -19,6 +19,8 @@ namespace UniversitySystem.Model
         public decimal Price { get; set; }
         public int? TeacherId { get; set; }
         public Teacher Teacher { get; set; }
+        public int? TopicId { get; set; }
+        public CourseTopic CourseTopic { get; set; }
         public ICollection<Student> Students { get; set; }
     }
 }

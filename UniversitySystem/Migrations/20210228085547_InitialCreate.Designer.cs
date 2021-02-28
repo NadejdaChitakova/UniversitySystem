@@ -10,16 +10,16 @@ using UniversitySystem.Data;
 namespace UniversitySystem.Migrations
 {
     [DbContext(typeof(UniversitySystemContext))]
-    [Migration("20210216123646_AddTeacherTable")]
-    partial class AddTeacherTable
+    [Migration("20210228085547_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("CourseStudent", b =>
                 {
@@ -41,7 +41,10 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("CourseTopicId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -56,11 +59,40 @@ namespace UniversitySystem.Migrations
                     b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseTopicId");
 
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.CourseTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CourseTopic");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Topic = "Math"
+                        });
                 });
 
             modelBuilder.Entity("UniversitySystem.Model.Enrollment", b =>
@@ -74,7 +106,7 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.HasKey("CourseId", "StudentId");
 
@@ -88,7 +120,7 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2")
@@ -112,7 +144,7 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -142,9 +174,15 @@ namespace UniversitySystem.Migrations
 
             modelBuilder.Entity("UniversitySystem.Model.Course", b =>
                 {
+                    b.HasOne("UniversitySystem.Model.CourseTopic", "CourseTopic")
+                        .WithMany("Courses")
+                        .HasForeignKey("CourseTopicId");
+
                     b.HasOne("UniversitySystem.Model.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId");
+
+                    b.Navigation("CourseTopic");
 
                     b.Navigation("Teacher");
                 });
@@ -166,6 +204,11 @@ namespace UniversitySystem.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.CourseTopic", b =>
+                {
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("UniversitySystem.Model.Teacher", b =>

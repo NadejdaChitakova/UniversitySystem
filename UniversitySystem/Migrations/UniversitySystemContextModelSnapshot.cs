@@ -41,6 +41,9 @@ namespace UniversitySystem.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int?>("CourseTopicId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -54,11 +57,45 @@ namespace UniversitySystem.Migrations
                     b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseTopicId");
 
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.CourseTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CourseTopic");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Topic = "Math"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Topic = "Computer sciences"
+                        });
                 });
 
             modelBuilder.Entity("UniversitySystem.Model.Enrollment", b =>
@@ -140,9 +177,15 @@ namespace UniversitySystem.Migrations
 
             modelBuilder.Entity("UniversitySystem.Model.Course", b =>
                 {
+                    b.HasOne("UniversitySystem.Model.CourseTopic", "CourseTopic")
+                        .WithMany("Courses")
+                        .HasForeignKey("CourseTopicId");
+
                     b.HasOne("UniversitySystem.Model.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId");
+
+                    b.Navigation("CourseTopic");
 
                     b.Navigation("Teacher");
                 });
@@ -164,6 +207,11 @@ namespace UniversitySystem.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.CourseTopic", b =>
+                {
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("UniversitySystem.Model.Teacher", b =>
