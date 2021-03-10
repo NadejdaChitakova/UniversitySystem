@@ -27,8 +27,8 @@ namespace UniversitySystem.Pages.Enrollments
 
         public Course currentCourse { get; set; }
 
-
-
+        public IList<Teacher> Teachers { get; set; }
+        
         public IndexModel(UniversitySystem.Data.UniversitySystemContext context)
         {
             _context = context;
@@ -39,14 +39,14 @@ namespace UniversitySystem.Pages.Enrollments
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            Teachers = await _context.Teacher.ToListAsync();
+            var enrollments = _context.Enrollment.ToList();
 
             if (id == null)
             {
                 return NotFound();
             }
              
-            var enrollments = _context.Enrollment.ToList();
-
             if (enrollments != null)
             {
                 Enrollments = enrollments;
@@ -54,14 +54,14 @@ namespace UniversitySystem.Pages.Enrollments
 
                 currentCourse = _context.Course.FirstOrDefault(d => d.Id == id);
                 ViewData["CourseId"] = currentCourse.Name;
+
+                var teacherId = currentCourse.TeacherId;
+                var teacherName = Teachers.FirstOrDefault(c => c.Id == teacherId);
+
+                ViewData["Teacher"] = teacherName.FirstName +" "+ teacherName.LastName;
             }
 
-
-
             EnrollmentId = (int)id;
-
-            
-           
 
             ViewData["StudentId"] = new SelectList(_context.Student, "Id","Id");
 

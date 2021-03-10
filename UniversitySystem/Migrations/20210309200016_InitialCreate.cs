@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UniversitySystem.Migrations
 {
-    public partial class initialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,20 @@ namespace UniversitySystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Login",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Login", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Student",
                 columns: table => new
                 {
@@ -28,11 +42,24 @@ namespace UniversitySystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(name: "Birth Date", type: "datetime2", nullable: false)
+                    BirthDate = table.Column<DateTime>(name: "Birth Date", type: "datetime2", nullable: false),
+                    Fullname = table.Column<int>(name: "Full name", type: "int", nullable: false),
+                    LoginId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Student", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Student_Login_Full name",
+                        column: x => x.Fullname,
+                        principalTable: "Login",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Student_Login_LoginId1",
+                        column: x => x.LoginId1,
+                        principalTable: "Login",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,11 +69,24 @@ namespace UniversitySystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LoginId = table.Column<int>(type: "int", nullable: false),
+                    LoginId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Teacher", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teacher_Login_LoginId",
+                        column: x => x.LoginId,
+                        principalTable: "Login",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Teacher_Login_LoginId1",
+                        column: x => x.LoginId1,
+                        principalTable: "Login",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,8 +122,7 @@ namespace UniversitySystem.Migrations
                         name: "FK_Course_Teacher_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teacher",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Course_Teacher_TeacherId1",
                         column: x => x.TeacherId1,
@@ -181,6 +220,26 @@ namespace UniversitySystem.Migrations
                 name: "IX_Enrollment_StudentId",
                 table: "Enrollment",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Student_Full name",
+                table: "Student",
+                column: "Full name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Student_LoginId1",
+                table: "Student",
+                column: "LoginId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teacher_LoginId",
+                table: "Teacher",
+                column: "LoginId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teacher_LoginId1",
+                table: "Teacher",
+                column: "LoginId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -202,6 +261,9 @@ namespace UniversitySystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Teacher");
+
+            migrationBuilder.DropTable(
+                name: "Login");
         }
     }
 }

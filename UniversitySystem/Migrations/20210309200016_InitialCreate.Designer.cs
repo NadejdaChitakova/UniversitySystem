@@ -10,8 +10,8 @@ using UniversitySystem.Data;
 namespace UniversitySystem.Migrations
 {
     [DbContext(typeof(UniversitySystemContext))]
-    [Migration("20210228122451_initialCreate")]
-    partial class initialCreate
+    [Migration("20210309200016_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -129,6 +129,24 @@ namespace UniversitySystem.Migrations
                     b.ToTable("Enrollment");
                 });
 
+            modelBuilder.Entity("UniversitySystem.Model.Login", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Login");
+                });
+
             modelBuilder.Entity("UniversitySystem.Model.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -148,7 +166,18 @@ namespace UniversitySystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LoginId")
+                        .HasColumnType("int")
+                        .HasColumnName("Full name");
+
+                    b.Property<int?>("LoginId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LoginId");
+
+                    b.HasIndex("LoginId1");
 
                     b.ToTable("Student");
                 });
@@ -166,7 +195,17 @@ namespace UniversitySystem.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LoginId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LoginId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LoginId");
+
+                    b.HasIndex("LoginId1");
 
                     b.ToTable("Teacher");
                 });
@@ -195,7 +234,7 @@ namespace UniversitySystem.Migrations
                     b.HasOne("UniversitySystem.Model.Teacher", null)
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UniversitySystem.Model.Teacher", "Teacher")
@@ -232,9 +271,46 @@ namespace UniversitySystem.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("UniversitySystem.Model.Student", b =>
+                {
+                    b.HasOne("UniversitySystem.Model.Login", null)
+                        .WithMany("Students")
+                        .HasForeignKey("LoginId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("UniversitySystem.Model.Login", "Login")
+                        .WithMany()
+                        .HasForeignKey("LoginId1");
+
+                    b.Navigation("Login");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.Teacher", b =>
+                {
+                    b.HasOne("UniversitySystem.Model.Login", null)
+                        .WithMany("Teachers")
+                        .HasForeignKey("LoginId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("UniversitySystem.Model.Login", "Login")
+                        .WithMany()
+                        .HasForeignKey("LoginId1");
+
+                    b.Navigation("Login");
+                });
+
             modelBuilder.Entity("UniversitySystem.Model.CourseTopic", b =>
                 {
                     b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("UniversitySystem.Model.Login", b =>
+                {
+                    b.Navigation("Students");
+
+                    b.Navigation("Teachers");
                 });
 
             modelBuilder.Entity("UniversitySystem.Model.Teacher", b =>

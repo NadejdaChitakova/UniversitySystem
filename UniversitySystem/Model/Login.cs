@@ -5,15 +5,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+// |id|username|password|userType
+
+
+
+// userTypes table
+// id
+// type
+
+
+
+
 namespace UniversitySystem.Model
 {
-    public class Teacher
+    public class Login
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id{ get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+
     }
 }

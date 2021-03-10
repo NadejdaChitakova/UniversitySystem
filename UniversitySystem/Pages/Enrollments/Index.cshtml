@@ -16,8 +16,12 @@
                 <span></span>
             </div>
             <div class="form-group">
+                <label asp-for="Enrollment.CourseId" class="control-label">Teacher:</label>
+                <label asp-for="Enrollment.CourseId" class="control-label">@ViewData["Teacher"]</label>
+            <div class="form-group">
                 <label asp-for="Enrollment.StudentId" class="control-label">Student id</label>
                 <select asp-for="Enrollment.StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
+            </div>         
             </div>
             <div class="form-group">
                 <input type="submit" value="enroll" class="btn btn-primary" />

@@ -26,18 +26,19 @@ namespace UniversitySystem.Data
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<CourseTopic>().ToTable("CourseTopic");
             modelBuilder.Entity<Teacher>().ToTable("Teacher");
+            modelBuilder.Entity<Login>().ToTable("Login");
 
             modelBuilder.Entity<Enrollment>()
                 .HasKey(c => new { c.CourseId, c.StudentId });
 
             modelBuilder.Entity<Teacher>().HasMany(c => c.Courses).WithOne()
-                .HasForeignKey(c => c.TeacherId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(c => c.TeacherId).IsRequired().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<CourseTopic>().HasMany(c => c.Courses).WithOne().
                 HasForeignKey(c =>c.TopicId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CourseTopic>().HasData(new CourseTopic { Id = 1 , Topic = "Math"},
                 new CourseTopic { Id = 2, Topic = "Computer sciences" });
-            
+            modelBuilder.Entity<Login>().HasData(new Login { Id = 1, Username = "Admin", Password = "Admin" });
         }
     }
 }
