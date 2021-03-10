@@ -25,6 +25,9 @@ namespace UniversitySystem.Pages.Courses
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            ViewData["Teacher"] = new SelectList(_context.Teacher, "Id", "Id", "FirstName", "LastName");
+            ViewData["Topic"] = new SelectList(_context.CourseTopic, "Id", "Topic");
+
             if (id == null)
             {
                 return NotFound();

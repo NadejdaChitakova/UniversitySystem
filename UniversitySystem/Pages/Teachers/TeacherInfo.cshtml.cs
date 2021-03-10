@@ -13,10 +13,10 @@ namespace UniversitySystem.Pages.Teachers
     {
         private readonly UniversitySystem.Data.UniversitySystemContext _context;
 
+        public Course Course { get; set; }
         public IList<Teacher> Teachers;
         public IList<Course> Courses;
         
-
         public TeacherInfo(UniversitySystem.Data.UniversitySystemContext context)
         {
             _context = context;
@@ -27,7 +27,6 @@ namespace UniversitySystem.Pages.Teachers
             Courses = await _context.Course.ToListAsync();
             Teachers = await _context.Teacher.ToListAsync();
             var currentCourse =  Courses.FirstOrDefault(c => c.Id == c.TeacherId);
-            ViewData["CurrentCourse"] = currentCourse.Name;
         }
     }
 }
